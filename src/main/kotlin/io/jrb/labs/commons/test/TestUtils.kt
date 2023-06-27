@@ -42,11 +42,31 @@ interface TestUtils {
 
     fun randomBoolean() = RandomUtils.nextBoolean()
 
+    fun <E : Enum<E>> randomEnum(enumClass: Class<E>): E {
+        val pos = RandomUtils.nextInt(0, enumClass.enumConstants.size - 1)
+        return enumClass.enumConstants[pos]
+    }
+
     fun randomGuid(): UUID = UUID.randomUUID()
 
     fun randomInt() = RandomUtils.nextInt(1, 1000)
 
+    fun <T> randomList(maxSize: Int, supplier: () -> T): List<T> {
+        val size = RandomUtils.nextInt(1, maxSize)
+        return (1..size).map { supplier.invoke() }
+    }
+
     fun randomLong(): Long = RandomUtils.nextLong(0, 1000L)
+
+    fun <K, V> randomMap(maxSize: Int, keySupplier: () -> K, valueSupplier: () -> V): Map<K, V> {
+        val size = RandomUtils.nextInt(1, maxSize)
+        return (1..size).associate { keySupplier.invoke() to valueSupplier.invoke() }
+    }
+
+    fun <T> randomSet(maxSize: Int, supplier: () -> T): Set<T> {
+        val size = RandomUtils.nextInt(1, maxSize)
+        return (1..size).map { supplier.invoke() }.toSet()
+    }
 
     fun randomString(): String = RandomStringUtils.randomAlphabetic(10)
 
